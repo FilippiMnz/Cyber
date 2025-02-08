@@ -2,47 +2,72 @@
 #include <vector>
 using namespace std;
 
-int main() {
-    while (1) {
+int main(){
+    while(true) {
         int N;
-        cin >> N;
-        vector<int> grid_largada;
-        vector<int> grid_chegada;
+        if(!(cin >> N)) break;  
+        if(N == 0) break;
 
-        for (size_t i = 0; i < N; i++) {
+        vector<int> grid_largada, grid_chegada;
+        grid_largada.reserve(N);
+        grid_chegada.reserve(N);
+
+        
+        for (int i = 0; i < N; i++){
             int id;
             cin >> id;
             grid_largada.push_back(id);
         }
 
-        for (size_t i = 0; i < N; i++) {
+        
+        for (int i = 0; i < N; i++){
             int id;
             cin >> id;
             grid_chegada.push_back(id);
         }
 
-        int alt = 0;
+        int alt = 0;  
 
-        for (size_t i = 0; i < N; i++) {
-            for (size_t a = 0; a < N; a++) {
-                if (grid_largada[i] == grid_chegada[a]) {
-                    if (i > a) {  
-                        int diff = i - a;
-                        alt += diff;
-                    } else if (i == a) {  
-                        int ultrapassagens = 0;
-                        for (size_t k = 0; k < N; k++) {
-                            if (k != i && grid_largada[k] < grid_largada[i] &&
-                                grid_chegada[k] > grid_chegada[a]) {
-                                ultrapassagens++;
-                            }
-                        }
-                        alt += ultrapassagens;
-                    }
+        
+        for (size_t i = 0; i < grid_largada.size(); i++){
+            int competidor = grid_largada[i];
+            size_t pos_chegada = 0;
+            
+            for (size_t a = 0; a < grid_chegada.size(); a++){
+                if(grid_chegada[a] == competidor){
+                    pos_chegada = a;
+                    break;
                 }
             }
+            
+            
+            if(i > pos_chegada){
+                alt += (i - pos_chegada);
+            }
+            
+            else if(i == pos_chegada){
+                int ultrapassagens = 0;
+                
+                for (size_t k = 0; k < i; k++){
+                    int comp_ahead = grid_largada[k];
+                    size_t pos_chegada_ahead = 0;
+                   
+                    for (size_t m = 0; m < grid_chegada.size(); m++){
+                        if(grid_chegada[m] == comp_ahead){
+                            pos_chegada_ahead = m;
+                            break;
+                        }
+                    }
+                    
+                    if(pos_chegada_ahead > pos_chegada)
+                        ultrapassagens++;
+                }
+                alt += ultrapassagens;
+            }
+            
         }
 
         cout << alt << endl;
     }
+    return 0;
 }
